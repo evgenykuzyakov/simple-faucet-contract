@@ -31,11 +31,11 @@ else
         --mount type=bind,source=$(pwd),target=/host \
         --cap-add=SYS_PTRACE --security-opt seccomp=unconfined \
         --name=build_"$NAME" \
-        -w /host/"$NAME" \
+        -w /host \
         -e RUSTFLAGS='-C link-arg=-s' \
         -it nearprotocol/contract-builder:"$TAG" \
         /bin/bash
 fi
 
 docker start build_"$NAME"
-docker exec build_"$NAME" /bin/bash -c "./build.sh"
+docker exec build_"$NAME" /bin/bash -c "./build_local.sh"

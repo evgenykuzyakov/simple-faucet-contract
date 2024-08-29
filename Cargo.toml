@@ -1,6 +1,6 @@
 [package]
 name = "simple-faucet-contract"
-version = "0.0.1"
+version = "0.1.0"
 authors = ["Eugene The Dream"]
 edition = "2021"
 publish = false

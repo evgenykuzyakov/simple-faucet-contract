@@ -1,0 +1,4 @@
+/target
+docker-target
+.env
+Cargo.lock

@@ -4,7 +4,7 @@ use near_sdk::{
     env, near, require, AccountId, BlockHeight, BorshStorageKey, NearToken, PanicOnDefault,
 };
 
-const STORAGE_BUFFER: NearToken = NearToken::from_yoctonear(29 * 10_000_000_000_000_000_000u128);
+const STORAGE_BUFFER: NearToken = NearToken::from_yoctonear(61 * 10_000_000_000_000_000_000u128);
 
 #[derive(BorshStorageKey)]
 #[near]

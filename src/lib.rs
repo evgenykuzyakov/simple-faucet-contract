@@ -59,6 +59,10 @@ impl Contract {
         self.approved_group
     }
 
+    pub fn get_num_groups(&self) -> u8 {
+        self.num_groups
+    }
+
     pub fn get_transfer_amount(&self) -> NearToken {
         self.transfer_amount
     }
@@ -89,7 +93,9 @@ impl Contract {
 
     pub fn get_account_group(&self, account_id: &AccountId) -> u8 {
         let hash = env::sha256(account_id.as_bytes());
-        hash[0] % self.num_groups
+        let mut bytes = [0u8; 16];
+        bytes.copy_from_slice(&hash[..16]);
+        (u128::from_le_bytes(bytes) % self.num_groups as u128) as u8
     }
 
     pub fn get_current_block_height(&self) -> BlockHeight {

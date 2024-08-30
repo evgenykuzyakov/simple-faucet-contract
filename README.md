@@ -168,3 +168,26 @@ near contract deploy $CONTRACT_ID_2 use-file res/simple_faucet_contract.wasm wit
 near contract deploy $CONTRACT_ID_3 use-file res/simple_faucet_contract.wasm with-init-call new json-args '{"transfer_amount": "10000000000000000000000", "approved_group": 3, "num_groups": 5, "start_time_ms": '$START_TIME_MS'}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' network-config testnet sign-with-keychain send
 near contract deploy $CONTRACT_ID_4 use-file res/simple_faucet_contract.wasm with-init-call new json-args '{"transfer_amount": "10000000000000000000000", "approved_group": 4, "num_groups": 5, "start_time_ms": '$START_TIME_MS'}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' network-config testnet sign-with-keychain send
 ```
+
+## Mainnet alpha round
+
+One group. Starts in 1 hour. About
+
+```bash
+export MASTER_CONTRACT_ID=moretps.near
+export ROOT_CONTRACT_ID=alpha.$MASTER_CONTRACT_ID
+near account create-account fund-myself $ROOT_CONTRACT_ID '3 NEAR' autogenerate-new-keypair save-to-legacy-keychain sign-as $MASTER_CONTRACT_ID network-config mainnet sign-with-legacy-keychain send
+
+export CONTRACT_ID_0="0.$ROOT_CONTRACT_ID"
+near account create-account fund-myself $CONTRACT_ID_0 '2.95 NEAR' autogenerate-new-keypair save-to-legacy-keychain sign-as $ROOT_CONTRACT_ID network-config mainnet sign-with-legacy-keychain send
+
+export CURRENT_TIME_S=$(date +%s)
+export START_TIME_MS=$(expr $CURRENT_TIME_S \* 1000 + 3600000)
+near contract deploy $CONTRACT_ID_0 use-file res/simple_faucet_contract.wasm with-init-call new json-args '{"transfer_amount": "10000000000000000000000", "approved_group": 0, "num_groups": 1, "start_time_ms": '$START_TIME_MS'}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' network-config mainnet sign-with-legacy-keychain send
+```
+
+## Redeploying
+
+```bash
+near contract deploy $CONTRACT_ID_0 use-file res/simple_faucet_contract.wasm without-init-call network-config mainnet sign-with-legacy-keychain send
+```

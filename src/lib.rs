@@ -82,6 +82,10 @@ impl Contract {
                 .as_yoctonear()
     }
 
+    pub fn has_claimed(&self, account_id: &AccountId) -> bool {
+        self.claims.contains(&PartialHash::from(account_id))
+    }
+
     pub fn can_claim(&self, account_id: &AccountId, time_ms: Option<u64>) -> bool {
         self.is_enough_for_a_claim()
             && self.get_account_group(account_id) == self.approved_group

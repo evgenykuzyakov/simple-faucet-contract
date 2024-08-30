@@ -1,8 +1,6 @@
 use near_sdk::store::LookupSet;
 use near_sdk::Promise;
-use near_sdk::{
-    env, near, require, AccountId, BlockHeight, BorshStorageKey, NearToken, PanicOnDefault,
-};
+use near_sdk::{env, near, require, AccountId, BorshStorageKey, NearToken, PanicOnDefault};
 
 const STORAGE_BUFFER: NearToken = NearToken::from_yoctonear(61 * 10_000_000_000_000_000_000u128);
 
@@ -32,7 +30,7 @@ pub struct Contract {
     transfer_amount: NearToken,
     approved_group: u8,
     num_groups: u8,
-    start_block_height: BlockHeight,
+    start_time_ms: u64,
     num_claims: u32,
 }
 
@@ -43,14 +41,14 @@ impl Contract {
         transfer_amount: NearToken,
         approved_group: u8,
         num_groups: u8,
-        start_block_height: BlockHeight,
+        start_time_ms: u64,
     ) -> Self {
         Self {
             claims: LookupSet::new(StorageKeys::Claims),
             transfer_amount,
             approved_group,
             num_groups,
-            start_block_height,
+            start_time_ms,
             num_claims: 0,
         }
     }
@@ -67,8 +65,8 @@ impl Contract {
         self.transfer_amount
     }
 
-    pub fn get_start_block_height(&self) -> BlockHeight {
-        self.start_block_height
+    pub fn get_start_time_ms(&self) -> u64 {
+        self.start_time_ms
     }
 
     pub fn get_num_claims(&self) -> u32 {
@@ -84,11 +82,11 @@ impl Contract {
                 .as_yoctonear()
     }
 
-    pub fn can_claim(&self, account_id: &AccountId, block_height: Option<BlockHeight>) -> bool {
+    pub fn can_claim(&self, account_id: &AccountId, time_ms: Option<u64>) -> bool {
         self.is_enough_for_a_claim()
             && self.get_account_group(account_id) == self.approved_group
             && !self.claims.contains(&PartialHash::from(account_id))
-            && block_height.unwrap_or_else(env::block_height) >= self.start_block_height
+            && time_ms.unwrap_or_else(|| self.get_current_time_ms()) >= self.start_time_ms
     }
 
     pub fn get_account_group(&self, account_id: &AccountId) -> u8 {
@@ -98,8 +96,8 @@ impl Contract {
         (u128::from_le_bytes(bytes) % self.num_groups as u128) as u8
     }
 
-    pub fn get_current_block_height(&self) -> BlockHeight {
-        env::block_height()
+    pub fn get_current_time_ms(&self) -> u64 {
+        env::block_timestamp() / 1_000_000
     }
 
     pub fn get_remaining_balance(&self) -> NearToken {
@@ -118,7 +116,7 @@ impl Contract {
 
     pub fn claim(&mut self) -> Promise {
         require!(
-            env::block_height() >= self.start_block_height,
+            self.get_current_time_ms() >= self.start_time_ms,
             "Too early to claim"
         );
         let account_id = env::predecessor_account_id();

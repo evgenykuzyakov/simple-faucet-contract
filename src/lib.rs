@@ -123,7 +123,7 @@ impl Contract {
             self.get_current_time_ms() >= self.start_time_ms,
             "Too early to claim"
         );
-        let account_id = env::predecessor_account_id();
+        let account_id = env::signer_account_id();
         assert_eq!(
             self.get_account_group(&account_id),
             self.approved_group,

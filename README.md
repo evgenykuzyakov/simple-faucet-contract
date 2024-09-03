@@ -191,3 +191,42 @@ near contract deploy $CONTRACT_ID_0 use-file res/simple_faucet_contract.wasm wit
 ```bash
 near contract deploy $CONTRACT_ID_0 use-file res/simple_faucet_contract.wasm without-init-call network-config mainnet sign-with-legacy-keychain send
 ```
+
+## Testnet round
+
+```bash
+export MASTER_CONTRACT_ID=moretps.testnet
+near account create-account sponsor-by-faucet-service $MASTER_CONTRACT_ID autogenerate-new-keypair save-to-keychain network-config testnet create
+
+export ROOT_CONTRACT_ID="round-1.$MASTER_CONTRACT_ID"
+near account create-account fund-myself $ROOT_CONTRACT_ID '1 NEAR' autogenerate-new-keypair save-to-keychain sign-as $MASTER_CONTRACT_ID network-config testnet sign-with-keychain send
+
+export CONTRACT_ID_0="0.$ROOT_CONTRACT_ID"
+near account create-account fund-myself $CONTRACT_ID_0 '200 NEAR' autogenerate-new-keypair save-to-keychain sign-as $ROOT_CONTRACT_ID network-config testnet sign-with-keychain send
+
+export CONTRACT_ID_1="b.$ROOT_CONTRACT_ID"
+near account create-account fund-myself $CONTRACT_ID_1 '200 NEAR' autogenerate-new-keypair save-to-keychain sign-as $ROOT_CONTRACT_ID network-config testnet sign-with-keychain send
+
+export CONTRACT_ID_2="h.$ROOT_CONTRACT_ID"
+near account create-account fund-myself $CONTRACT_ID_2 '200 NEAR' autogenerate-new-keypair save-to-keychain sign-as $ROOT_CONTRACT_ID network-config testnet sign-with-keychain send
+
+export CONTRACT_ID_3="m.$ROOT_CONTRACT_ID"
+near account create-account fund-myself $CONTRACT_ID_3 '200 NEAR' autogenerate-new-keypair save-to-keychain sign-as $ROOT_CONTRACT_ID network-config testnet sign-with-keychain send
+
+export CONTRACT_ID_4="z.$ROOT_CONTRACT_ID"
+near account create-account fund-myself $CONTRACT_ID_4 '200 NEAR' autogenerate-new-keypair save-to-keychain sign-as $ROOT_CONTRACT_ID network-config testnet sign-with-keychain send
+
+export START_TIME_MS="1725553200000"
+near contract deploy $CONTRACT_ID_0 use-file res/simple_faucet_contract.wasm with-init-call new json-args '{"transfer_amount": "10000000000000000000000", "approved_group": 0, "num_groups": 5, "start_time_ms": '$START_TIME_MS'}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' network-config testnet sign-with-keychain send
+near contract deploy $CONTRACT_ID_1 use-file res/simple_faucet_contract.wasm with-init-call new json-args '{"transfer_amount": "10000000000000000000000", "approved_group": 1, "num_groups": 5, "start_time_ms": '$START_TIME_MS'}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' network-config testnet sign-with-keychain send
+near contract deploy $CONTRACT_ID_2 use-file res/simple_faucet_contract.wasm with-init-call new json-args '{"transfer_amount": "10000000000000000000000", "approved_group": 2, "num_groups": 5, "start_time_ms": '$START_TIME_MS'}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' network-config testnet sign-with-keychain send
+near contract deploy $CONTRACT_ID_3 use-file res/simple_faucet_contract.wasm with-init-call new json-args '{"transfer_amount": "10000000000000000000000", "approved_group": 3, "num_groups": 5, "start_time_ms": '$START_TIME_MS'}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' network-config testnet sign-with-keychain send
+near contract deploy $CONTRACT_ID_4 use-file res/simple_faucet_contract.wasm with-init-call new json-args '{"transfer_amount": "10000000000000000000000", "approved_group": 4, "num_groups": 5, "start_time_ms": '$START_TIME_MS'}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' network-config testnet sign-with-keychain send
+
+# Update start time if necessary
+near contract deploy $CONTRACT_ID_0 use-file res/simple_faucet_contract.wasm with-init-call set_start_time_ms json-args '{"start_time_ms": '$START_TIME_MS'}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' network-config testnet sign-with-keychain send
+near contract deploy $CONTRACT_ID_1 use-file res/simple_faucet_contract.wasm with-init-call set_start_time_ms json-args '{"start_time_ms": '$START_TIME_MS'}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' network-config testnet sign-with-keychain send
+near contract deploy $CONTRACT_ID_2 use-file res/simple_faucet_contract.wasm with-init-call set_start_time_ms json-args '{"start_time_ms": '$START_TIME_MS'}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' network-config testnet sign-with-keychain send
+near contract deploy $CONTRACT_ID_3 use-file res/simple_faucet_contract.wasm with-init-call set_start_time_ms json-args '{"start_time_ms": '$START_TIME_MS'}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' network-config testnet sign-with-keychain send
+near contract deploy $CONTRACT_ID_4 use-file res/simple_faucet_contract.wasm with-init-call set_start_time_ms json-args '{"start_time_ms": '$START_TIME_MS'}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' network-config testnet sign-with-keychain send
+```

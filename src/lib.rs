@@ -53,6 +53,11 @@ impl Contract {
         }
     }
 
+    #[private]
+    pub fn set_start_time_ms(&mut self, start_time_ms: u64) {
+        self.start_time_ms = start_time_ms;
+    }
+
     pub fn get_approved_group(&self) -> u8 {
         self.approved_group
     }
